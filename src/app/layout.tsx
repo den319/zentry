@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import Navbar from "@/components/navbar";
 
 export const metadata: Metadata = {
   title: "Zentry: The Metagame",
@@ -16,6 +17,7 @@ export default function RootLayout({
       <body
         className={`relative min-h-screen w-screen overflow-x-hidden`}
       >
+        <Navbar />  
         {children}
       </body>
     </html>
