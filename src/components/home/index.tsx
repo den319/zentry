@@ -52,7 +52,7 @@ export default function HomeComponent() {
 
 
 
-    console.log({currIdx, upcomingVideoIdx, totalVideo, loadedVideo, loading});
+    // console.log({currIdx, upcomingVideoIdx, totalVideo, loadedVideo, loading});
 
     // Preload all videos on component mount
     useEffect(() => {

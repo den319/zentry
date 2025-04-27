@@ -15,7 +15,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`relative min-h-screen w-screen overflow-x-hidden`}
+        className={`relative min-h-screen w-screen overflow-x-hidden no-scrollbar`}
       >
         <Navbar />  
         {children}
