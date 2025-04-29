@@ -1,12 +1,11 @@
 "use client"
 
-import { RefObject, Suspense, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Button from "../common/button";
 import { TiLocationArrow } from "react-icons/ti";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/all";
-import dynamic from "next/dynamic";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -23,7 +22,7 @@ export default function HomeComponent() {
     const totalVideo= 4;
     const nextVideoRef = useRef<HTMLVideoElement>(null);
 
-    let upcomingVideoIdx= (currIdx % totalVideo) + 1;
+    // let upcomingVideoIdx= (currIdx % totalVideo) + 1;
 
     const handleVideoLoad= () => {
         setLoadedVideo((prev:number) => {
@@ -78,7 +77,7 @@ export default function HomeComponent() {
 
     useGSAP(() => {
         if(hasClicked) {
-            const nextVideo:any= nextVideoRef?.current;
+            const nextVideo:HTMLVideoElement | null= nextVideoRef?.current;
 
             console.log("next-video: ", nextVideo);
 
@@ -91,7 +90,13 @@ export default function HomeComponent() {
                 height: '100%',
                 duration: 1,
                 ease: 'power1.inOut',
-                onStart: () => nextVideo && nextVideo?.play(),
+                onStart: () => {
+                    if (nextVideo) {
+                      nextVideo.play().catch((err) => {
+                        console.warn("Video play failed:", err);
+                      });
+                    }
+                  }
             })
 
             gsap.from('#current-video', {

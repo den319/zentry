@@ -1,11 +1,9 @@
 "use client"
 
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import Button from "../common/button";
-import { TiLocationArrow } from "react-icons/ti";
 import { navItems } from "@/const";
-import { TbArrowBadgeDown, TbArrowBadgeDownFilled } from "react-icons/tb";
+import { TbArrowBadgeDownFilled } from "react-icons/tb";
 import { useWindowScroll } from "react-use";
 import gsap from "gsap";
 
@@ -16,8 +14,8 @@ const Navbar= () => {
     const [lastScrollY, setLastScrollY]= useState(0);
     const [isNaveVisible, setNavVisible]= useState(true);
 
-    const navRef= useRef<HTMLDivElement | any>(undefined);
-    const audioRef= useRef<HTMLAudioElement | any>(undefined);
+    const navRef= useRef<HTMLDivElement>(null);
+    const audioRef= useRef<HTMLAudioElement>(null);
 
     const {y: currentScrollY}= useWindowScroll();
 
@@ -30,13 +28,13 @@ const Navbar= () => {
     useEffect(() => {
         if(currentScrollY === 0) {
             setNavVisible(true);
-            navRef.current.classList.remove('floating-nav');
+            navRef?.current?.classList.remove('floating-nav');
         } else if(currentScrollY > lastScrollY) {
             setNavVisible(false);
-            navRef.current.classList.add('floating-nav');
+            navRef?.current?.classList.add('floating-nav');
         } else if(currentScrollY < lastScrollY){
             setNavVisible(true);
-            navRef.current.classList.add('floating-nav');
+            navRef?.current?.classList.add('floating-nav');
         }
 
         setLastScrollY(currentScrollY); 

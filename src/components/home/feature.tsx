@@ -47,7 +47,6 @@ const BentoTilt= ({children, className}:BentoTiltProps) => {
         setTransformStyle("");
     }
 
-    console
     return(
         <div 
             ref={itemRef}
@@ -60,7 +59,7 @@ const BentoTilt= ({children, className}:BentoTiltProps) => {
         </div>
     )
 }
-const BentoCard= ({src, title, description, isComingSoon}:BentoCardProps) => {
+const BentoCard= ({src, title, description}:BentoCardProps) => {
     return (
         <div className="relative size-full">
             <video
