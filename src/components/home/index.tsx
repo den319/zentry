@@ -15,7 +15,7 @@ gsap.registerPlugin(ScrollTrigger);
 // })
 
 export default function HomeComponent() {
-    const {loading, setLoading}= HomeContext();
+    const {setLoading}= HomeContext();
 
     const [currIdx, setCurrIdx]= useState<number>(1);
     const [hasClicked, setHasClicked]= useState<boolean>(false);
