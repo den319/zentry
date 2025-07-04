@@ -5,12 +5,14 @@ import Button from "../common/button";
 interface ImageClipBoxProps {
     src?: string;
     clipClass?: string;
+    alt?:string,
 }
 
-const ImageClipBox= ({src, clipClass}:ImageClipBoxProps) => (
+const ImageClipBox= ({src, clipClass,alt}:ImageClipBoxProps) => (
     <div className={clipClass}>
         <img 
             src={src}  
+            alt={alt}
         />
     </div>
 )
@@ -22,10 +24,12 @@ const Contact= () => {
                 <div className="absolute -left-20 top-0 hidden h-full w-72 overflow-hidden sm:block lg:left-20 lg:w-96">
                     <ImageClipBox
                         src="/img/contact-1.webp"
+                        alt="contact"
                         clipClass="contact-clip-path-1"
                     />
                     <ImageClipBox
                         src="/img/contact-2.webp"
+                        alt="contact"
                         clipClass="contact-clip-path-2 translate-y-60 lg:translate-y-5"
                     />
 
@@ -33,11 +37,13 @@ const Contact= () => {
                 <div className="absolute -top-40 left-20 w-60 sm:top-1/2 md:left-auto md:right-10 lg:top-20 lg:w-80">
                     <ImageClipBox
                         src="/img/swordman-partial.webp"
+                        alt="contact"
                         clipClass="absolute md:scale-125"
                     />
 
                     <ImageClipBox
                         src="/img/swordman.webp"
+                        alt="contact"
                         clipClass="sword-man-clip-path md:scale-125"
                     />
                 </div>

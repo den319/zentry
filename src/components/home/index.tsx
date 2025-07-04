@@ -6,6 +6,7 @@ import { TiLocationArrow } from "react-icons/ti";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/all";
+import { HomeContext } from "@/providers/homeContext";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -14,25 +15,33 @@ gsap.registerPlugin(ScrollTrigger);
 // })
 
 export default function HomeComponent() {
+    const {loading, setLoading}= HomeContext();
+
     const [currIdx, setCurrIdx]= useState<number>(1);
     const [hasClicked, setHasClicked]= useState<boolean>(false);
-    const [loading, setLoading]= useState<boolean>(true);
     const [loadedVideo, setLoadedVideo]= useState<number>(0);
 
     const totalVideo= 4;
     const nextVideoRef = useRef<HTMLVideoElement>(null);
 
+    const title = [
+        <>g<b>a</b>ming</>,
+        <>ide<b>n</b>tity</>,
+        <>re<b>a</b>lity</>,
+        <>ag<b>e</b>ntic ai</>
+    ];
+
     // let upcomingVideoIdx= (currIdx % totalVideo) + 1;
 
     const handleVideoLoad= () => {
         setLoadedVideo((prev:number) => {
-            console.log("Video loaded, updating count:", prev + 1);
+            // console.log("Video loaded, updating count:", prev + 1);
             return prev + 1;
         });
     }
 
     useEffect(() => {
-        console.log("Loaded videos:", loadedVideo);
+        // console.log("Loaded videos:", loadedVideo);
         if(loadedVideo === totalVideo) {
             setLoading(false);
         }
@@ -40,7 +49,7 @@ export default function HomeComponent() {
     
 
     function handleMiniClick() {
-        console.log("clicked"); 
+        // console.log("clicked"); 
         setHasClicked(true);
         setCurrIdx((prev: number) => (prev % totalVideo) + 1);
     }
@@ -54,32 +63,71 @@ export default function HomeComponent() {
     // console.log({currIdx, upcomingVideoIdx, totalVideo, loadedVideo, loading});
 
     // Preload all videos on component mount
-    useEffect(() => {
-        // Create an array of video sources to preload
-        const videoSources = Array.from({ length: totalVideo }, (_, i) => getVideoSrc(i + 1));
+    // useEffect(() => {
+    //     // Create an array of video sources to preload
+    //     const videoSources = Array.from({ length: totalVideo }, (_, i) => getVideoSrc(i + 1));
         
-        // Preload each video
-        videoSources.forEach(src => {
-            const video = document.createElement('video');
-            video.src = src;
-            video.preload = 'auto';
+    //     // Preload each video
+    //     videoSources.forEach(src => {
+    //         const video = document.createElement('video');
+    //         video.src = src;
+    //         video.preload = 'auto';
             
-            // Use the loadeddata event
-            video.addEventListener('loadeddata', handleVideoLoad);
+    //         // Use the loadeddata event
+    //         video.addEventListener('loadeddata', handleVideoLoad);
             
-            // Clean up
-            return () => {
-                video.removeEventListener('loadeddata', handleVideoLoad);
-            };
-        });
-    }, [totalVideo]);
+    //         // Clean up
+    //         return () => {
+    //             video.removeEventListener('loadeddata', handleVideoLoad);
+    //         };
+    //     });
+    // }, [totalVideo]);
+
+    useEffect(() => {
+        const totalVideo = 4;
+        const getVideoSrc = (index: number) => `/videos/hero-${index}.mp4`;
+        let loadedCount = 0;
+        
+        const preloadVideos = async () => {
+          // Method 1: Immediate fetch with high priority
+          const videoPromises = Array.from({ length: totalVideo }, (_, i) => 
+            fetch(getVideoSrc(i + 1), { 
+              priority: 'high',
+              cache: 'force-cache' 
+            }).then(response => {
+              if (response.ok) {
+                loadedCount++;
+                // console.log(`Video ${i + 1} fetched with high priority`);
+                
+                // Show content after first video
+                if (loadedCount === 1) {
+                  setLoading(false);
+                }
+              }
+              return response;
+            })
+          );
+          
+          // Method 2: Create video elements for browser caching
+          videoPromises.forEach((promise, index) => {
+            promise.then(() => {
+              const video = document.createElement('video');
+              video.src = getVideoSrc(index + 1);
+              video.preload = 'auto';
+              video.load(); // Force load
+            });
+          });
+        };
+        
+        preloadVideos();
+      }, [setLoading]);
 
 
     useGSAP(() => {
         if(hasClicked) {
             const nextVideo:HTMLVideoElement | null= nextVideoRef?.current;
 
-            console.log("next-video: ", nextVideo);
+            // console.log("next-video: ", nextVideo);
 
             gsap.set("next-video", {visibility: 'visible'});
 
@@ -128,7 +176,7 @@ export default function HomeComponent() {
      
     return (
         <div className="relative h-dvh w-screen overflow-x-hidden">
-            {
+            {/* {
                 loading && (
                     <div className="flex-center absolute z-[100] h-dvh w-screen overflow-hidden bg-violet-50">
                         <div className="three-body">
@@ -138,7 +186,7 @@ export default function HomeComponent() {
                         </div>
                     </div>
                 )
-            }
+            } */}
             <div id="video-frame" className="relative z-10 h-dvh w-screen overflow-hidden rounded-lg bg-blue-75">
                 <div>
                     <div className="mask-clip-path absolute-center absolute z-50 size-64
@@ -183,7 +231,9 @@ export default function HomeComponent() {
                 </div>
 
                 <h1 className="special-font hero-heading absolute bottom-5 right-5 z-40 text-blue-75">
-                    G<b>a</b>ming
+                    {
+                        title[currIdx - 1]
+                    }
                 </h1>
 
                 <div className="absolute left-0 top-0 size-full">
@@ -228,7 +278,9 @@ export default function HomeComponent() {
             </div>
 
             <h1 className="special-font hero-heading absolute bottom-5 right-5 text-black">
-                G<b>A</b>MING
+                {
+                    title[currIdx - 1]
+                }
             </h1>
         </div>
     );

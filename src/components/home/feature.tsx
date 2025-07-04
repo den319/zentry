@@ -1,6 +1,6 @@
 "use client"
 
-import React, { ReactNode, useRef, useState } from "react";
+import React, { ReactNode, useEffect, useRef, useState } from "react";
 
 
 interface BentoCardProps {
@@ -60,13 +60,33 @@ const BentoTilt= ({children, className}:BentoTiltProps) => {
     )
 }
 const BentoCard= ({src, title, description}:BentoCardProps) => {
+    const [hover, setHover]= useState<boolean>(false);
+
+    const videoRef = useRef<HTMLVideoElement>(null);
+
+    // console.log("hover: ", {hover});
+
+    useEffect(() => {
+        if (videoRef.current) {
+            if (hover) {
+                videoRef.current.play().catch(console.error);
+            } else {
+                videoRef.current.pause();
+            }
+        }
+    }, [hover]);
+    
+
     return (
-        <div className="relative size-full">
+        <div className="relative size-full"
+            onMouseEnter={() => setHover(true)}
+            onMouseLeave={() => setHover(false)}
+        >
             <video
                 src={src}
                 loop
                 muted
-                autoPlay
+                ref={videoRef}   
                 className="absolute left-0 top-0 size-full object-cover object-center"
             />
 
@@ -91,13 +111,13 @@ const Feature= () => {
     return (
         <section className="bg-black pb-52">
             <div className="container mx-auto px-3 md:px-10">
-                <div className="px-5 py-32">
+                <div className="pb-4 pt-32">
                     <p className="font-circular-web text-lg text-blue-50">
                         Explore the Zentry Universe
                     </p>
                 </div>
 
-                <p className="max-w-md font-circular-web text-lg text-blue-50 opacity-50">
+                <p className="max-w-md font-circular-web text-lg text-blue-50 opacity-50 pb-8">
                     Immerse yourself in an IP-rich product universe where players, 
                     agentic AI and blockchain lead the new economic paradigm.
                 </p>
